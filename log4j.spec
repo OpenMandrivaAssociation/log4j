@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 2
+Release:        %mkrel 3
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -31,7 +31,7 @@ BuildRequires:  jms
 BuildRequires:  mx4j
 BuildRequires:  jndi
 BuildRequires:  java-javadoc
-BuildRequires:  xml-commons-apis
+BuildRequires:  xml-commons-jaxp-1.3-apis
 BuildRequires:  jaxp_parser_impl
 Requires:       jaf
 %if !%{bootstrap}
@@ -41,7 +41,7 @@ Requires:       jms
 Requires:       mx4j
 Requires:       jndi
 Requires:       jpackage-utils >= 0:1.5
-Requires:       xml-commons-apis
+Requires:       xml-commons-jaxp-1.3-apis
 Requires:       jaxp_parser_impl
 Requires(post):	sgml-common libxml2-utils
 Requires(preun):	libxml2-utils
