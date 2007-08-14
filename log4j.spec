@@ -93,9 +93,9 @@ export CLASSPATH=$(build-classpath jaf javamail/mailapi jms mx4j)
 export CLASSPATH=$(build-classpath jaf javamail/mailapi)
 %endif
 
-ant -Djdk.javadoc=%{_javadocdir}/java jar javadoc
+%ant -Djdk.javadoc=%{_javadocdir}/java -Djavac.source=1.3 jar javadoc
 if [ -z "`unzip -l dist/lib/%{name}-%{version}.jar |grep META-INF/INDEX.LIST`" ]; then
-	jar -i dist/lib/%{name}-%{version}.jar
+	%jar -i dist/lib/%{name}-%{version}.jar
 fi
 
 %install
