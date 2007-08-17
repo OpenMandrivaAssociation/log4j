@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 3
+Release:        %mkrel 4
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -39,7 +39,9 @@ Requires:       javamail
 %endif
 Requires:       jms
 Requires:       mx4j
-Requires:       jndi
+# (anssi) jndi is provided by all our Java VMs, so we simplify the dependency
+# graph by not requiring it.
+#Requires:       jndi
 Requires:       jpackage-utils >= 0:1.5
 Requires:       xml-commons-jaxp-1.3-apis
 Requires:       jaxp_parser_impl
