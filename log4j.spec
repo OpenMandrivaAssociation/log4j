@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 4
+Release:        %mkrel 5
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -136,32 +136,33 @@ rm -rf %{buildroot}
 %post
 %{_bindir}/install-catalog --add \
 	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-	%{_datadir}/sgml/%{name}/catalog
+	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
 
 %{_bindir}/xmlcatalog --noout --add system log4j.dtd \
-	file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog
+	file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
 %if %{gcj_support}
 %{_bindir}/rebuild-gcj-db
 %endif
 
 %preun
 %{_bindir}/xmlcatalog --noout --del \
-	log4j.dtd %{_sysconfdir}/xml/catalog
+	log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
 
 %postun
 %{_bindir}/install-catalog --remove \
 	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-	%{_datadir}/sgml/%{name}/catalog
+	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
 %if %{gcj_support}
 %{_bindir}/rebuild-gcj-db
 %endif
 
 %files
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc INSTALL LICENSE
-%{_bindir}/*
+%attr(0755,root,root) %{_bindir}/*
 %{_javadir}/*
 %if %{gcj_support}
+%dir %{_libdir}/gcj/%{name}
 %attr(-,root,root) %{_libdir}/gcj/%{name}/*.jar.*
 %endif
 %{_datadir}/applications/*
@@ -177,5 +178,3 @@ rm -rf %{buildroot}
 %dir %{_javadocdir}/%{name}-%{version}
 %{_javadocdir}/%{name}-%{version}/*
 %{_javadocdir}/%{name}
-
-
