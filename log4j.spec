@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 7
+Release:        %mkrel 8
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -33,18 +33,24 @@ BuildRequires:  jndi
 BuildRequires:  java-javadoc
 BuildRequires:  xml-commons-jaxp-1.3-apis
 BuildRequires:  jaxp_parser_impl
-Requires:       jaf
-%if !%{bootstrap}
-Requires:       javamail
-%endif
-Requires:       jms
-Requires:       mx4j
+# (anssi) do not require these explicitely at runtime, they are not needed
+# by all apps that use log4j
+#Requires:       jaf
+#%if !%{bootstrap}
+#Requires:       javamail
+#%endif
+#Requires:       jms
+#Requires:       mx4j
 # (anssi) jndi is provided by all our Java VMs, so we simplify the dependency
 # graph by not requiring it.
 #Requires:       jndi
 Requires:       jpackage-utils >= 0:1.5
+# TODO: Check whether we could somehow get rid of this one, AFAIK it is not
+# needed by azureus but still pulled in (Fedora pulls it, Debian does not):
 Requires:       xml-commons-jaxp-1.3-apis
 Requires:       jaxp_parser_impl
+Requires:       java
+# TODO: check if we could conditionalize these in %post and remove these:
 Requires(post):	sgml-common libxml2-utils
 Requires(preun):	libxml2-utils
 Requires(postun):	sgml-common
@@ -139,7 +145,7 @@ rm -rf %{buildroot}
 %{_bindir}/xmlcatalog --noout --add system log4j.dtd \
 	file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
 %if %{gcj_support}
-%{_bindir}/rebuild-gcj-db
+%update_gcjdb
 %endif
 
 %preun
@@ -151,7 +157,7 @@ rm -rf %{buildroot}
 	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
 	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
 %if %{gcj_support}
-%{_bindir}/rebuild-gcj-db
+%clean_gcjdb
 %endif
 
 %files
