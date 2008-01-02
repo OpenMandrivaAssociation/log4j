@@ -61,6 +61,7 @@ BuildRequires:        java-gcj-compat
 %else
 BuildArch:      noarch
 %endif
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 #Vendor:         JPackage Project
 #Distribution:   JPackage
 
