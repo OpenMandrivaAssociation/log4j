@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 9
+Release:        %mkrel 10
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
