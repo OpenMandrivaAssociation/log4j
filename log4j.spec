@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 12
+Release:        %mkrel 12.0.1
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -57,7 +57,7 @@ Requires(postun):	sgml-common
 Group:          Development/Java
 %if %{gcj_support}
 BuildRequires:        gcc-java
-BuildRequires:        java-gcj-compat
+BuildRequires:        java-gcj-compat-devel
 %else
 BuildArch:      noarch
 %endif
