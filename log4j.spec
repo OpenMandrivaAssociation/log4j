@@ -1,10 +1,10 @@
-%define gcj_support 1
+%define gcj_support 0
 %define bootstrap 0
 %define section        free
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 12.0.2
+Release:        %mkrel 12.0.3
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -31,8 +31,6 @@ BuildRequires:  jms
 BuildRequires:  mx4j
 BuildRequires:  jndi
 BuildRequires:  java-javadoc
-BuildRequires:  xml-commons-jaxp-1.3-apis
-BuildRequires:  jaxp_parser_impl
 # (anssi) do not require these explicitely at runtime, they are not needed
 # by all apps that use log4j
 #Requires:       jaf
@@ -47,9 +45,7 @@ BuildRequires:  jaxp_parser_impl
 Requires:       jpackage-utils >= 0:1.5
 # TODO: Check whether we could somehow get rid of this one, AFAIK it is not
 # needed by azureus but still pulled in (Fedora pulls it, Debian does not):
-Requires:       xml-commons-jaxp-1.3-apis
-Requires:       jaxp_parser_impl
-Requires:       java
+Requires:       java >= 0:1.6.0
 # TODO: check if we could conditionalize these in %post and remove these:
 Requires(post):	sgml-common libxml2-utils
 Requires(preun):	libxml2-utils
