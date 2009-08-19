@@ -4,7 +4,7 @@
 
 Name:           log4j
 Version:        1.2.14
-Release:        %mkrel 12.0.3
+Release:        %mkrel 12.0.4
 Epoch:          0
 Summary:        Java logging package
 License:        Apache License
@@ -43,8 +43,7 @@ BuildRequires:  java-javadoc
 # graph by not requiring it.
 #Requires:       jndi
 Requires:       jpackage-utils >= 0:1.5
-# TODO: Check whether we could somehow get rid of this one, AFAIK it is not
-# needed by azureus but still pulled in (Fedora pulls it, Debian does not):
+Requires:	liblog4j-java = %{version}
 Requires:       java >= 0:1.6.0
 # TODO: check if we could conditionalize these in %post and remove these:
 Requires(post):	sgml-common libxml2-utils
@@ -64,6 +63,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 %description
 Log4j is a tool to help the programmer output log statements to a
 variety of output targets.
+
+# Split to avoid dependency on sgml-common/libxml2-utils in vuze-console package:
+%package -n	liblog4j-java
+Summary:	Java logging library
+Group:		Development/Java
+Conflicts:	log4j < 1.2.14-12.0.4
+
+%description -n	liblog4j-java
+Log4j is a tool to help the programmer output log statements to a
+variety of output targets.
+
+This package contains the jar only. See %{name} for tools and catalogs.
 
 %package        manual
 Summary:        Manual for %{name}
@@ -140,7 +151,9 @@ rm -rf %{buildroot}
 
 %{_bindir}/xmlcatalog --noout --add system log4j.dtd \
 	file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
+
 %if %{gcj_support}
+%post -n liblog4j-java
 %update_gcjdb
 %endif
 
@@ -152,7 +165,10 @@ rm -rf %{buildroot}
 %{_bindir}/install-catalog --remove \
 	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
 	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
+
+
 %if %{gcj_support}
+%postun -n liblog4j-java
 %clean_gcjdb
 %endif
 
@@ -160,14 +176,17 @@ rm -rf %{buildroot}
 %defattr(0644,root,root,0755)
 %doc INSTALL LICENSE
 %attr(0755,root,root) %{_bindir}/*
-%{_javadir}/*
+%{_datadir}/applications/*
+%{_datadir}/pixmaps/*
+%{_datadir}/sgml/%{name}
+
+%files -n liblog4j-java
+%defattr(-,root,root)
+%{_javadir}/*.jar
 %if %{gcj_support}
 %dir %{_libdir}/gcj/%{name}
 %attr(-,root,root) %{_libdir}/gcj/%{name}/*.jar.*
 %endif
-%{_datadir}/applications/*
-%{_datadir}/pixmaps/*
-%{_datadir}/sgml/%{name}
 
 %files manual
 %defattr(0644,root,root,0755)
