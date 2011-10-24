@@ -1,15 +1,15 @@
-%define gcj_support 0
-%define bootstrap 0
-%define section        free
+
+%global bootstrap %{?_with_bootstrap:1}%{!?_with_bootstrap:%{?_without_bootstrap:0}%{!?_without_bootstrap:%{?_bootstrap:%{_bootstrap}}%{!?_bootstrap:0}}}
 
 Name:           log4j
-Version:        1.2.14
-Release:        %mkrel 12.0.7
-Epoch:          0
+Version:        1.2.16
+Release:        7
 Summary:        Java logging package
-License:        Apache License
-URL:            http://logging.apache.org/log4j/
-Source0:        http://www.apache.org/dist/logging/log4j/%{version}/logging-log4j-%{version}.tar.gz
+BuildArch:      noarch
+License:        ASL 2.0
+Group:          Development/Java
+URL:            http://logging.apache.org/%{name}
+Source0:        http://www.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}.tar.gz
 # Converted from src/java/org/apache/log4j/lf5/viewer/images/lf5_small_icon.gif
 Source1:        %{name}-logfactor5.png
 Source2:        %{name}-logfactor5.sh
@@ -19,181 +19,211 @@ Source4:        %{name}-chainsaw.png
 Source5:        %{name}-chainsaw.sh
 Source6:        %{name}-chainsaw.desktop
 Source7:        %{name}.catalog
-Patch0:         %{name}-logfactor5-userdir.patch
-Patch1:         %{name}-javadoc-xlink.patch
-BuildRequires:  java-rpmbuild >= 0:1.5
-BuildRequires:  ant
-BuildRequires:  jaf >= 0:1.0.1
-%if !%{bootstrap}
-BuildRequires:  javamail >= 0:1.2
-%endif
-BuildRequires:  jms
-BuildRequires:  mx4j
-BuildRequires:  jndi
-BuildRequires:  java-javadoc
-# (anssi) do not require these explicitely at runtime, they are not needed
-# by all apps that use log4j
-#Requires:       jaf
-#%if !%{bootstrap}
-#Requires:       javamail
-#%endif
-#Requires:       jms
-#Requires:       mx4j
-# (anssi) jndi is provided by all our Java VMs, so we simplify the dependency
-# graph by not requiring it.
-#Requires:       jndi
-Requires:       jpackage-utils >= 0:1.5
-Requires:	liblog4j-java = %{version}
+Patch0:         0001-logfactor5-changed-userdir.patch
+Patch1:         0002-Remove-version-dependencies.patch
+Patch2:         0003-Removed-example-in-wrong-place.patch
+Patch3:         0004-Remove-mvn-release-plugin.patch
+Patch4:         0005-Remove-mvn-source-plugin.patch
+Patch5:         0006-Remove-mvn-clirr-plugin.patch
+Patch6:         0007-Remove-mvn-rat-plugin.patch
+Patch7:         0008-Remove-ant-contrib-from-dependencies.patch
+Patch8:         0009-Remove-ant-run-of-tests.patch
+Patch9:         0010-Fix-javadoc-link.patch
+Patch10:        0011-Fix-ant-groupId.patch
+
+BuildRequires:  %{__perl}
+BuildRequires:  java >= 0:1.6.0
+BuildRequires:  jpackage-utils >= 0:1.6
+BuildRequires:  javamail
+BuildRequires:  geronimo-jms
+BuildRequires:  geronimo-parent-poms
+BuildRequires:  desktop-file-utils
+BuildRequires:  jpackage-utils >= 0:1.7.2
+BuildRequires:  maven-plugin-bundle
+BuildRequires:  maven-surefire-maven-plugin
+BuildRequires:  maven-surefire-provider-junit
+BuildRequires:  maven-ant-plugin
+BuildRequires:  maven-antrun-plugin
+BuildRequires:  maven-assembly-plugin
+BuildRequires:  maven-compiler-plugin
+BuildRequires:  maven-idea-plugin
+BuildRequires:  maven-install-plugin
+BuildRequires:  maven-jar-plugin
+BuildRequires:  maven-javadoc-plugin
+BuildRequires:  maven-resources-plugin
+BuildRequires:  maven-site-plugin
+BuildRequires:  ant-junit
+
+
 Requires:       java >= 0:1.6.0
-# TODO: check if we could conditionalize these in %post and remove these:
-Requires(post):	sgml-common libxml2-utils
-Requires(preun):	libxml2-utils
-Requires(postun):	sgml-common
-Group:          Development/Java
-%if %{gcj_support}
-BuildRequires:        gcc-java
-BuildRequires:        java-gcj-compat-devel
-%else
-BuildArch:      noarch
-%endif
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-#Vendor:         JPackage Project
-#Distribution:   JPackage
+Requires:       jpackage-utils >= 0:1.6
+Requires(post):    jpackage-utils
+Requires(postun):  jpackage-utils
+Requires:       xml-commons-apis
 
 %description
 Log4j is a tool to help the programmer output log statements to a
 variety of output targets.
 
-# Split to avoid dependency on sgml-common/libxml2-utils in vuze-console package:
-%package -n	liblog4j-java
-Summary:	Java logging library
-Group:		Development/Java
-Conflicts:	log4j < 1.2.14-12.0.4
-
-%description -n	liblog4j-java
-Log4j is a tool to help the programmer output log statements to a
-variety of output targets.
-
-This package contains the jar only. See %{name} for tools and catalogs.
-
 %package        manual
-Summary:        Manual for %{name}
+Summary:        Developer manual for %{name}
 Group:          Development/Java
+Requires:       %{name}-javadoc = %{version}-%{release}
 
 %description    manual
-Documentation for %{name}.
+%{summary}.
 
 %package        javadoc
-Summary:        Javadoc for %{name}
+Summary:        API documentation for %{name}
 Group:          Development/Java
+Requires:       jpackage-utils
 
 %description    javadoc
-Javadoc for %{name}.
+%{summary}.
 
 %prep
-%setup -q -n logging-%{name}-%{version}
-%patch0 -p0
-%patch1 -p0
-# remove all binary libs
-find . -name "*.jar" -exec rm -f {} \;
-# fix perl location
-sed -i -e 's|/opt/perl5/bin/perl|%{__perl}|' contribs/KitchingSimon/udpserver.pl
+%setup -q -n apache-%{name}-%{version}
+# see patch files themselves for reasons for applying
+%patch0 -p1 -b .logfactor-home
+%patch1 -p1 -b .remove-dep-version
+%patch2 -p1 -b .remove-example
+%patch3 -p1 -b .remove-mvn-release
+%patch4 -p1 -b .remove-mvn-source
+%patch5 -p1 -b .remove-mvn-clirr
+%patch6 -p1 -b .remove-mvn-rat
+%patch7 -p1 -b .remove-and-contrib
+%patch8 -p1 -b .remove-tests
+%patch9 -p1 -b .xlink-javadoc
+%patch10 -p1 -b .ant-groupid
+
+sed -i 's/\r//g' LICENSE NOTICE site/css/*.css site/xref/*.css \
+    site/xref-test/*.css
+
+# fix encoding of mailbox files
+for i in contribs/JimMoore/mail*;do
+    iconv --from=ISO-8859-1 --to=UTF-8 "$i" > new
+    mv new "$i"
+done
+
+# remove all the stuff we'll build ourselves
+find . \( -name "*.jar" -o -name "*.class" \) -exec %__rm -f {} \;
+%__rm -rf docs/api
+
+
 
 %build
-%if !%{bootstrap}
-export CLASSPATH=$(build-classpath jaf javamail/mailapi jms mx4j)
-%else
-export CLASSPATH=$(build-classpath jaf javamail/mailapi)
-%endif
+export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
+mkdir -p $MAVEN_REPO_LOCAL
 
-%ant -Djdk.javadoc=%{_javadocdir}/java -Djavac.source=1.3 jar javadoc
-if [ -z "`unzip -l dist/lib/%{name}-%{version}.jar |grep META-INF/INDEX.LIST`" ]; then
-	%jar -i dist/lib/%{name}-%{version}.jar
-fi
+# we don't need javadoc:javadoc because build system is broken and
+# builds javadoc when install-ing
+# also note that maven.test.skip doesn't really work and we had to
+# patch ant run of tests out of pom
+mvn-jpp -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
+        -Dmaven.test.skip=true \
+        package
 
 %install
-rm -rf %{buildroot}
-
 # jars
-install -m644 dist/lib/%{name}-%{version}.jar -D %{buildroot}%{_javadir}/%{name}-%{version}.jar
-ln -s %{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
+#install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+install -pD -T -m 644 target/%{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
+
+# pom
+install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+install -pm 644 pom.xml $RPM_BUILD_ROOT/%{_mavenpomdir}/JPP-%{name}.pom
+%add_to_maven_depmap %{name} %{name} %{version} JPP %{name}
 
 # javadoc
-install -d %{buildroot}%{_javadocdir}/%{name}-%{version}
-cp -r docs/api/* %{buildroot}%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
+install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr target/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
 # scripts
-install -m755 %{SOURCE2} -D %{buildroot}%{_bindir}/logfactor5
-install -m755 %{SOURCE5} -D %{buildroot}%{_bindir}/chainsaw
+install -pD -T -m 755 %{SOURCE2} %{buildroot}%{_bindir}/logfactor5
+install -pD -T -m 755 %{SOURCE5} %{buildroot}%{_bindir}/chainsaw
 
 # freedesktop.org menu entries and icons
-install -m644 %{SOURCE1} -D %{buildroot}%{_datadir}/pixmaps/logfactor5.png
-install -m644 %{SOURCE3} -D %{buildroot}%{_datadir}/applications/jpackage-logfactor5.desktop
-install -m644 %{SOURCE4} -D %{buildroot}%{_datadir}/pixmaps/chainsaw.png
-install -m644 %{SOURCE6} -D %{buildroot}%{_datadir}/applications/jpackage-chainsaw.desktop
+install -pD -T -m 755 %{SOURCE1} \
+        %{buildroot}%{_datadir}/pixmaps/logfactor5.png
+desktop-file-install \
+     --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
+     %{SOURCE3}
+
+install -pD -T -m 755 %{SOURCE4} \
+        %{buildroot}%{_datadir}/pixmaps/chainsaw.png
+desktop-file-install \
+     --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
+     %{SOURCE6}
+
 
 # DTD and the SGML catalog (XML catalog handled in scriptlets)
-install -m644 src/java/org/apache/log4j/xml/log4j.dtd -D %{buildroot}%{_datadir}/sgml/%{name}/log4j.dtd
-install -m644 %{SOURCE7} -D %{buildroot}%{_datadir}/sgml/%{name}/catalog
+install -pD -T -m 644 src/main/javadoc/org/apache/log4j/xml/doc-files/log4j.dtd \
+  %{buildroot}%{_datadir}/sgml/%{name}/log4j.dtd
+install -pD -T -m 644 %{SOURCE7} \
+  %{buildroot}%{_datadir}/sgml/%{name}/catalog
 
-%if %{gcj_support}
-aot-compile-rpm
-%endif
+# fix perl location
+%__perl -p -i -e 's|/opt/perl5/bin/perl|%{__perl}|' \
+contribs/KitchingSimon/udpserver.pl
 
-%clean
-rm -rf %{buildroot}
 
 %post
-%{_bindir}/install-catalog --add \
-	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
+%update_maven_depmap
+# Note that we're using versioned catalog, so this is always ok.
+if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
+  %{_bindir}/install-catalog --add \
+    %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+    %{_datadir}/sgml/%{name}/catalog > /dev/null || :
+fi
+if [ -x %{_bindir}/xmlcatalog -a -w %{_sysconfdir}/xml/catalog ]; then
+  %{_bindir}/xmlcatalog --noout --add system log4j.dtd \
+    file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog \
+    > /dev/null || :
+fi
 
-%{_bindir}/xmlcatalog --noout --add system log4j.dtd \
-	file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
-
-%if %{gcj_support}
-%post -n liblog4j-java
-%update_gcjdb
-%endif
 
 %preun
-%{_bindir}/xmlcatalog --noout --del \
-	log4j.dtd %{_sysconfdir}/xml/catalog >/dev/null 2>&1
+if [ $1 -eq 0 ]; then
+  if [ -x %{_bindir}/xmlcatalog -a -w %{_sysconfdir}/xml/catalog ]; then
+    %{_bindir}/xmlcatalog --noout --del log4j.dtd \
+      %{_sysconfdir}/xml/catalog > /dev/null || :
+  fi
+fi
+
 
 %postun
-%{_bindir}/install-catalog --remove \
-	%{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-	%{_datadir}/sgml/%{name}/catalog >/dev/null 2>&1
+%update_maven_depmap
+# Note that we're using versioned catalog, so this is always ok.
+if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
+  %{_bindir}/install-catalog --remove \
+    %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
+    %{_datadir}/sgml/%{name}/catalog > /dev/null || :
+fi
 
+%pre javadoc
+# workaround rpm bug, can be removed in F-17
+[ $1 -gt 1 ] && [ -L %{_javadocdir}/%{name} ] && \
+rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
-%if %{gcj_support}
-%postun -n liblog4j-java
-%clean_gcjdb
-%endif
 
 %files
-%defattr(0644,root,root,0755)
-%doc INSTALL LICENSE
-%attr(0755,root,root) %{_bindir}/*
+%defattr(-,root,root,-)
+%doc LICENSE NOTICE
+%{_bindir}/*
+%{_javadir}/*
+%{_mavenpomdir}/JPP-%{name}.pom
+%{_mavendepmapfragdir}/*
 %{_datadir}/applications/*
 %{_datadir}/pixmaps/*
 %{_datadir}/sgml/%{name}
 
-%files -n liblog4j-java
-%defattr(-,root,root)
-%{_javadir}/*.jar
-%if %{gcj_support}
-%dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/*.jar.*
-%endif
-
 %files manual
-%defattr(0644,root,root,0755)
-%doc docs/* contribs
+%defattr(-,root,root,-)
+%doc LICENSE NOTICE
+%doc site/*.html site/css site/images/ site/xref site/xref-test contribs
 
 %files javadoc
-%defattr(0644,root,root,0755)
-%dir %{_javadocdir}/%{name}-%{version}
-%{_javadocdir}/%{name}-%{version}/*
-%{_javadocdir}/%{name}
+%defattr(-,root,root,-)
+%doc LICENSE NOTICE
+%doc %{_javadocdir}/%{name}
+
+
