@@ -3,7 +3,7 @@
 
 Name:           log4j
 Version:        1.2.16
-Release:        7
+Release:        9
 Summary:        Java logging package
 BuildArch:      noarch
 License:        ASL 2.0
