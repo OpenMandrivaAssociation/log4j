@@ -1,0 +1,36 @@
+From ef230e88b5381bb2cb2ef257846412b610b4e111 Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Mon, 17 May 2010 13:55:19 +0200
+Subject: [PATCH 05/10] Remove mvn-source-plugin
+
+for now this is included in current mvn in Fedora. Remove once
+source-plugin is separate
+---
+ pom.xml |   11 -----------
+ 1 files changed, 0 insertions(+), 11 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index f98a700..c273581 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -350,17 +350,6 @@ target platform and specify -Dntdll_target=msbuild on the mvn command line.
+           </execution>
+         </executions>
+       </plugin>
+-      <plugin>
+-        <artifactId>maven-source-plugin</artifactId>
+-        <version>2.1.1</version>
+-        <executions>
+-          <execution>
+-            <goals>
+-              <goal>jar</goal>
+-            </goals>
+-          </execution>
+-        </executions>
+-      </plugin>
+       <!--
+         clirr:check will fail with NullPointerException
+         due to missing javax.jms.MessageListener,
+-- 
+1.6.6.1
+

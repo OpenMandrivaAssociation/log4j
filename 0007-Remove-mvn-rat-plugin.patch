@@ -1,0 +1,35 @@
+From 16fb799c20651dfbaf2bdbc7e6e55f598e44b27c Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Mon, 17 May 2010 14:03:31 +0200
+Subject: [PATCH 07/10] Remove mvn-rat-plugin
+
+for now this is included in current mvn in Fedora. Remove once
+rat-plugin is separate
+---
+ pom.xml |   10 ----------
+ 1 files changed, 0 insertions(+), 10 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index 6e32bb7..cb76444 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -351,16 +351,6 @@ target platform and specify -Dntdll_target=msbuild on the mvn command line.
+         </executions>
+       </plugin>
+       <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>rat-maven-plugin</artifactId>
+-        <version>1.0-alpha-3</version>
+-        <configuration>
+-            <excludes>
+-                <exclude>tests/witness/**</exclude>
+-            </excludes>
+-        </configuration>
+-      </plugin>
+-      <plugin>
+         <groupId>org.apache.felix</groupId>
+         <artifactId>maven-bundle-plugin</artifactId>
+         <version>2.0.1</version>
+-- 
+1.6.6.1
+

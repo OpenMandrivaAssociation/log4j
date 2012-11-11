@@ -1,0 +1,35 @@
+From af23b075c392a2e8b33b3ee0c9d5d26406a6d193 Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Thu, 9 Dec 2010 13:30:44 +0100
+Subject: [PATCH 11/11] Fix ant groupId
+
+---
+ pom.xml |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index 406fa43..efcfe26 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -264,14 +264,14 @@ target platform and specify -Dntdll_target=msbuild on the mvn command line.
+         </executions>
+         <dependencies>
+           <dependency>
+-            <groupId>ant</groupId>
++            <groupId>org.apache.ant</groupId>
+             <artifactId>ant-nodeps</artifactId>
+-            <version>1.6.5</version>
++            <version>1.8.1</version>
+           </dependency>
+           <dependency>
+-            <groupId>ant</groupId>
++            <groupId>org.apache.ant</groupId>
+             <artifactId>ant-junit</artifactId>
+-            <version>1.6.5</version>
++            <version>1.8.11</version>
+           </dependency>
+           <dependency>
+             <groupId>junit</groupId>
+-- 
+1.7.3.2
+
