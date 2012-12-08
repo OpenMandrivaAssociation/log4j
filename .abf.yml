@@ -1,9 +1,2 @@
 sources:
-  "apache-log4j-1.2.16.tar.gz:"	5d0547046eceedcd4bd9e816a93540dbf8f4ca93
-  "log4j.catalog:"	b0566933b6b28f0a4fa81d78f1351c7e38c07c0a
-  "log4j-chainsaw.desktop:"	b7905af82fa6bbe4b24d180fe869bfed1d37c784
-  "log4j-chainsaw.png:"	4b452cce9c172f726cdf27631c41665e9ab2defb
-  "log4j-chainsaw.sh:"	51cd6c6f4d181c5ed2cc0c0a26798007aa207a37
-  "log4j-logfactor5.desktop:"	66b39a09edf1d8b4f7b11cb41b3fad1d3e2a22c4
-  "log4j-logfactor5.png:"	639fb2a901939eb1bc1cdb876a11836a2b517be1
-  "log4j-logfactor5.sh:"	59953621e31e976fd0c7caa0f8751e77721c971f
+  "logging-log4j-1.2.14.tar.gz": 2365021f8f277e77e281b0e01333ecea7c721e3e
