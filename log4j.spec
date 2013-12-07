@@ -5,7 +5,7 @@
 Summary:	Java logging package
 Name:		log4j
 Version:	1.2.14
-Release:	14
+Release:	15
 Group:		Development/Java
 License:	Apache License
 Url:		http://logging.apache.org/log4j/
