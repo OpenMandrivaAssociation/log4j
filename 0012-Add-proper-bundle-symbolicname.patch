@@ -1,0 +1,31 @@
+From 48a67c6bfa320277f40e5b8589ef43b2695b86c6 Mon Sep 17 00:00:00 2001
+From: Stanislav Ochotnicky <sochotnicky@redhat.com>
+Date: Thu, 14 Jun 2012 10:50:09 +0200
+Subject: [PATCH 2/2] Add proper bundle symbolicname
+
+---
+ pom.xml |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/pom.xml b/pom.xml
+index a627c48..d235556 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -420,11 +420,13 @@ target platform and specify -Dntdll_target=msbuild on the mvn command line.
+ 		<Import-Package>!javax.swing.*,
+ 				!com.ibm.uvm.tools.*,
+ 				!com.sun.jdmk.comm.*,
+-				javax.jmdns.*;resolution:=optional,
++				!javax.jmdns.*,
+ 				javax.jms.*;resolution:=optional,
+ 				javax.mail.*;resolution:=optional,
+                                 *</Import-Package>
+                 <Bundle-DocURL>http://logging.apache.org/log4j/1.2</Bundle-DocURL>
++                <Bundle-SymbolicName>org.apache.log4j</Bundle-SymbolicName>
++                <_nouses>true</_nouses>
+             </instructions>
+         </configuration>
+       </plugin>
+-- 
+1.7.10.2
+

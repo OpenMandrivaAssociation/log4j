@@ -2,8 +2,7 @@
 Name=LogFactor5
 Comment=Graphical user interface for managing log4j log messages
 Exec=logfactor5
-Icon=logfactor5.png
+Icon=logfactor5
 Terminal=false
 Type=Application
-Encoding=UTF-8
-Categories=Application;Development;Monitor;X-JPackage;
+Categories=GNOME;Application;Development;X-JPackage;GTK;

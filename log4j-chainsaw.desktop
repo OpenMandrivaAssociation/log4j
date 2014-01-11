@@ -5,5 +5,4 @@ Exec=chainsaw
 Icon=chainsaw
 Terminal=false
 Type=Application
-Encoding=UTF-8
-Categories=Application;Development;Monitor;X-JPackage;
+Categories=GNOME;Application;Development;X-JPackage;GTK;
