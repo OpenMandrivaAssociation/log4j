@@ -25,7 +25,7 @@ fi
 
 # Configuration
 MAIN_CLASS=org.apache.log4j.chainsaw.Main
-BASE_JARS="log4j xml-commons-jaxp-1.3-apis jaxp_parser_impl"
+BASE_JARS="log4j xml-commons-apis jaxp_parser_impl"
 
 # Set parameters
 set_jvm
