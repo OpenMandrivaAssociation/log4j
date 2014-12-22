@@ -1,188 +1,240 @@
 %{?_javapackages_macros:%_javapackages_macros}
-%global bootstrap %{?_with_bootstrap:1}%{!?_with_bootstrap:%{?_without_bootstrap:0}%{!?_without_bootstrap:%{?_bootstrap:%{_bootstrap}}%{!?_bootstrap:0}}}
-
 Name:           log4j
-Version:        1.2.17
-Release:        14.1%{?dist}
-Epoch:          0
+Version:        2.0
+Release:        1.1
 Summary:        Java logging package
+Group:		Development/Java
 BuildArch:      noarch
 License:        ASL 2.0
 URL:            http://logging.apache.org/%{name}
-Source0:        http://www.apache.org/dist/logging/%{name}/%{version}/%{name}-%{version}.tar.gz
-# Converted from src/java/org/apache/log4j/lf5/viewer/images/lf5_small_icon.gif
-Source101:      %{name}-logfactor5.png
-Source102:      %{name}-logfactor5.sh
-Source103:      %{name}-logfactor5.desktop
-Source104:      %{name}-logfactor5.1
-# Converted from docs/images/logo.jpg
-Source111:      %{name}-chainsaw.png
-Source112:      %{name}-chainsaw.sh
-Source113:      %{name}-chainsaw.desktop
-Source114:      %{name}-chainsaw.1
-Source200:      %{name}.catalog
-Patch0:         0001-logfactor5-changed-userdir.patch
-Patch1:         0006-Remove-mvn-clirr-plugin.patch
-Patch2:         0009-Fix-tests.patch
-Patch3:         0010-Fix-javadoc-link.patch
-Patch4:         0011-Remove-openejb.patch
-Patch5:         0012-Add-proper-bundle-symbolicname.patch
+Source0:        http://www.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}-src.tar.gz
 
-BuildRequires:  %{__perl}
-BuildRequires:  desktop-file-utils
 BuildRequires:  maven-local
-BuildRequires:  javamail
-BuildRequires:  junit
-BuildRequires:  geronimo-jms
-BuildRequires:  jakarta-oro
-BuildRequires:  ant-contrib
-BuildRequires:  ant-junit
+BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-core)
+BuildRequires:  mvn(com.fasterxml.jackson.core:jackson-databind)
+BuildRequires:  mvn(com.h2database:h2)
+BuildRequires:  mvn(com.lmax:disruptor)
+BuildRequires:  mvn(commons-httpclient:commons-httpclient)
+BuildRequires:  mvn(commons-logging:commons-logging)
+BuildRequires:  mvn(com.sun.mail:javax.mail)
+BuildRequires:  mvn(javax.jmdns:jmdns)
+BuildRequires:  mvn(javax.servlet:javax.servlet-api)
+BuildRequires:  mvn(javax.servlet.jsp:jsp-api)
+BuildRequires:  mvn(javax.servlet:servlet-api)
+BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(org.apache:apache:pom:)
+BuildRequires:  mvn(org.apache.commons:commons-lang3)
+BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:  mvn(org.apache.felix:org.apache.felix.framework)
+BuildRequires:  mvn(org.apache.geronimo.specs:geronimo-jms_1.1_spec)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-antrun-plugin)
+BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:  mvn(org.codehaus.mojo:exec-maven-plugin)
+BuildRequires:  mvn(org.easymock:easymock)
+BuildRequires:  mvn(org.eclipse.osgi:org.eclipse.osgi)
+BuildRequires:  mvn(org.eclipse.persistence:org.eclipse.persistence.jpa)
+BuildRequires:  mvn(org.fusesource.jansi:jansi)
+BuildRequires:  mvn(org.hibernate.javax.persistence:hibernate-jpa-2.1-api)
+BuildRequires:  mvn(org.hsqldb:hsqldb)
+BuildRequires:  mvn(org.lightcouch:lightcouch)
+BuildRequires:  mvn(org.mongodb:mongo-java-driver)
+BuildRequires:  mvn(org.slf4j:slf4j-api)
+BuildRequires:  mvn(org.slf4j:slf4j-ext)
+BuildRequires:  mvn(org.springframework:spring-core)
+BuildRequires:  mvn(org.springframework:spring-test)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-failsafe-plugin)
+BuildRequires:  mvn(com.fasterxml.jackson.dataformat:jackson-dataformat-xml)
+BuildRequires:  mvn(com.fasterxml.jackson.dataformat:jackson-dataformat-yaml)
+BuildRequires:  mvn(org.jboss.spec.javax.jms:jboss-jms-api_1.1_spec)
+
+Obsoletes:      %{name}-osgi < %{version}-%{release}
 
 %description
 Log4j is a tool to help the programmer output log statements to a
 variety of output targets.
 
-%package        manual
-Summary:        Developer manual for %{name}
-Requires:       %{name}-javadoc = %{version}-%{release}
+%package osgi
+Summary:        Apache Log4J Core OSGi Bundles
 
-%description    manual
-%{summary}.
+%description osgi
+Apache Log4J Core OSGi Bundles.
+
+%package slf4j
+Summary:        Binding between LOG4J 2 API and SLF4J
+
+%description slf4j
+Binding between LOG4J 2 API and SLF4J.
+
+%package taglib
+Summary:        Apache Log4j Tag Library
+
+%description taglib
+Apache Log4j Tag Library for Web Applications.
+
+%package jcl
+Summary:        Apache Log4j Commons Logging Bridge
+
+%description jcl
+Apache Log4j Commons Logging Bridge.
+
+%package jmx-gui
+Summary:        Apache Log4j JMX GUI
+Requires:       java-devel
+
+%description jmx-gui
+Swing-based client for remotely editing the log4j configuration and remotely
+monitoring StatusLogger output. Includes a JConsole plug-in.
+
+%package web
+Summary:        Apache Log4j Web
+
+%description web
+Support for Log4j in a web servlet container.
+
+%package bom
+Summary:        Apache Log4j BOM
+
+%description bom
+Apache Log4j 2 Bill of Material
+
+%package nosql
+Summary:        Apache Log4j NoSql
+
+%description nosql
+Use NoSQL databases such as MongoDB and CouchDB to append log messages.
 
 %package        javadoc
 Summary:        API documentation for %{name}
+Obsoletes:      %{name}-manual < %{version}
 
 %description    javadoc
 %{summary}.
 
 %prep
-%setup -q -n apache-%{name}-%{version}
-# see patch files themselves for reasons for applying
-%patch0 -p1 -b .logfactor-home
-%patch1 -p1 -b .remove-mvn-clirr
-%patch2 -p1 -b .fix-tests
-%patch3 -p1 -b .xlink-javadoc
-%patch4 -p1 -b .openejb
-%patch5 -p1 -b .bundlename
+%setup -q -n apache-%{name}-%{version}-src
+
 %pom_remove_plugin :maven-site-plugin
-
-sed -i "s|groupId>ant<|groupId>org.apache.ant<|g" pom.xml
-
-sed -i 's/\r//g' LICENSE NOTICE site/css/*.css site/xref/*.css \
-    site/xref-test/*.css
-
-# fix encoding of mailbox files
-for i in contribs/JimMoore/mail*;do
-    iconv --from=ISO-8859-1 --to=UTF-8 "$i" > new
-    mv new "$i"
-done
 
 # remove all the stuff we'll build ourselves
 find -name "*.jar" -o -name "*.class" -delete
 rm -rf docs/api
 
-# Needed by tests
-mkdir -p tests/lib/
-(cd tests/lib/
-  ln -s `build-classpath jakarta-oro`
-  ln -s `build-classpath javamail/mail`
-  ln -s `build-classpath junit`
-)
+%pom_disable_module %{name}-samples
+%pom_disable_module %{name}-distribution
 
+# Apache Flume is not in Fedora yet
+%pom_disable_module %{name}-flume-ng
+
+# jmh not available
+%pom_disable_module %{name}-perf
+
+# System scoped dep provided by JDK
+%pom_remove_dep :jconsole %{name}-jmx-gui
+%pom_add_dep sun.jdk:jconsole %{name}-jmx-gui
+
+# Different AID, provided by equinox
+%pom_remove_dep :org.osgi.core pom.xml %{name}-core %{name}-api
+
+# Classpath hell, equinox must come before felix
+%pom_remove_dep org.eclipse.osgi:org.eclipse.osgi %{name}-core
+%pom_add_dep org.eclipse.osgi:org.eclipse.osgi:any:provided %{name}-core
+
+# Old version of specification
+%pom_remove_dep :javax.persistence %{name}-core
+%pom_add_dep org.hibernate.javax.persistence:hibernate-jpa-2.1-api:any:provided %{name}-core
+
+# Do not generate requires on optional dependencies
+%pom_xpath_inject "pom:dependency[pom:optional='true' and not(pom:scope)]" '<scope>provided</scope>' %{name}-core
+
+# Required at compile-time not just test, but we don't want requires
+%pom_xpath_set "pom:dependency[pom:groupId='org.eclipse.persistence']/pom:scope" provided %{name}-core
+%pom_xpath_set "pom:dependency[pom:groupId='org.eclipse.osgi']/pom:scope" provided %{name}-core
+
+%mvn_alias :%{name}-1.2-api %{name}:%{name}
+
+# Note that packages using the compatibility layer still need to have log4j-core
+# on the classpath to run. This is there to prevent build-classpath from putting
+# whole dir on the classpath which results in loading incorrect provider
+%mvn_file ':{%{name}-1.2-api}' %{name}/@1 %{name}
+
+%mvn_package ':%{name}-slf4j-impl' slf4j
+%mvn_package ':%{name}-to-slf4j' slf4j
+%mvn_package ':%{name}-taglib' taglib
+%mvn_package ':%{name}-jcl' jcl
+%mvn_package ':%{name}-jmx-gui' jmx-gui
+%mvn_package ':%{name}-web' web
+%mvn_package ':%{name}-bom' bom
+%mvn_package ':%{name}-nosql' nosql
 
 %build
-%mvn_file : %{name}
-%mvn_build
+# missing test deps (mockejb)
+%mvn_build -f
 
 %install
 %mvn_install
 
-# scripts
-install -pD -T -m 755 %{SOURCE102} %{buildroot}%{_bindir}/logfactor5
-install -pD -T -m 755 %{SOURCE112} %{buildroot}%{_bindir}/chainsaw
+%jpackage_script org.apache.logging.log4j.jmx.gui.ClientGUI '' '' %{name}/%{name}-jmx-gui:%{name}/%{name}-core %{name}-jmx false
 
-# freedesktop.org menu entries and icons
-install -pD -T -m 644 %{SOURCE101} \
-        %{buildroot}%{_datadir}/pixmaps/logfactor5.png
-desktop-file-install \
-     --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
-     %{SOURCE103}
-
-install -pD -T -m 644 %{SOURCE111} \
-        %{buildroot}%{_datadir}/pixmaps/chainsaw.png
-desktop-file-install \
-     --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
-     %{SOURCE113}
-
-# Manual pages
-install -d -m 755 ${RPM_BUILD_ROOT}%{_mandir}/man1
-install -p -m 644 %{SOURCE104} ${RPM_BUILD_ROOT}%{_mandir}/man1/logfactor5.1
-install -p -m 644 %{SOURCE114} ${RPM_BUILD_ROOT}%{_mandir}/man1/chainsaw.1
-
-# DTD and the SGML catalog (XML catalog handled in scriptlets)
-install -pD -T -m 644 src/main/javadoc/org/apache/log4j/xml/doc-files/log4j.dtd \
-  %{buildroot}%{_datadir}/sgml/%{name}/log4j.dtd
-install -pD -T -m 644 %{SOURCE200} \
-  %{buildroot}%{_datadir}/sgml/%{name}/catalog
-
-# fix perl location
-%__perl -p -i -e 's|/opt/perl5/bin/perl|%{__perl}|' \
-contribs/KitchingSimon/udpserver.pl
-
-
-%post
-# Note that we're using versioned catalog, so this is always ok.
-if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
-  %{_bindir}/install-catalog --add \
-    %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
-    %{_datadir}/sgml/%{name}/catalog > /dev/null || :
-fi
-if [ -x %{_bindir}/xmlcatalog -a -w %{_sysconfdir}/xml/catalog ]; then
-  %{_bindir}/xmlcatalog --noout --add public "-//APACHE//DTD LOG4J 1.2//EN" \
-    file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog \
-    > /dev/null
-  %{_bindir}/xmlcatalog --noout --add system log4j.dtd \
-    file://%{_datadir}/sgml/%{name}/log4j.dtd %{_sysconfdir}/xml/catalog \
-    > /dev/null || :
-fi
-
-
+# TODO: Remove this in F-24
 %preun
 if [ $1 -eq 0 ]; then
-  if [ -x %{_bindir}/xmlcatalog -a -w %{_sysconfdir}/xml/catalog ]; then
-    %{_bindir}/xmlcatalog --noout --del \
+  if [ -x xmlcatalog -a -w %{_sysconfdir}/xml/catalog ]; then
+    xmlcatalog --noout --del \
       file://%{_datadir}/sgml/%{name}/log4j.dtd \
       %{_sysconfdir}/xml/catalog > /dev/null || :
   fi
 fi
 
-
+# TODO: Remove this in F-24
 %postun
 # Note that we're using versioned catalog, so this is always ok.
-if [ -x %{_bindir}/install-catalog -a -d %{_sysconfdir}/sgml ]; then
-  %{_bindir}/install-catalog --remove \
+if [ -x install-catalog -a -d %{_sysconfdir}/sgml ]; then
+  install-catalog --remove \
     %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.cat \
     %{_datadir}/sgml/%{name}/catalog > /dev/null || :
 fi
 
 %files -f .mfiles
-%doc LICENSE NOTICE
-%{_bindir}/*
-%{_mandir}/*/*
-%{_datadir}/applications/*
-%{_datadir}/pixmaps/*
-%{_datadir}/sgml/%{name}
+%dir %{_javadir}/%{name}
+%doc LICENSE.txt NOTICE.txt
 
-%files manual
-%doc LICENSE NOTICE
-%doc site/*.html site/css site/images/ site/xref site/xref-test contribs
+%files slf4j -f .mfiles-slf4j
+%files taglib -f .mfiles-taglib
+%files jcl -f .mfiles-jcl
+%files web -f .mfiles-web
+%files bom -f .mfiles-bom
+%files nosql -f .mfiles-nosql
+%files jmx-gui -f .mfiles-jmx-gui
+%{_bindir}/%{name}-jmx
 
-%files javadoc
-%doc LICENSE NOTICE
-%doc %{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
+%doc LICENSE.txt NOTICE.txt
 
 
 %changelog
+* Fri Jul 18 2014 Michael Simacek <msimacek@redhat.com> 2.0-1
+- Update to upstream version 2.0
+- Remove osgi subpackage (osgi parts were moved to corresponding artifacts)
+- Add web, bom, nosql subpackages (new)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-0.3.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 16 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0-0.2.rc1
+- Drop provides for log4j-manual
+
+* Fri May 09 2014 Michael Simacek <msimacek@redhat.com> - 0:2.0-0.1.rc1
+- Update to upstream version 2.0-rc1
+- Split into subpackages
+- Remove logfactor and chainsaw scripts which are no longer shipped
+- Remove XML catalogs which are no longer shipped
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.2.17-16
+- Use Requires: java-headless rebuild (#1067528)
+
+* Thu Feb 20 2014 Michael Simacek <msimacek@redhat.com> - 0:1.2.17-15
+- Set javamail and geronimo-jms dependency scopes to provided (removes requires)
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.2.17-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
