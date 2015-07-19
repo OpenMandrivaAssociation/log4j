@@ -1,7 +1,7 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           log4j
 Version:        2.0
-Release:        1.1
+Release:        1.2
 Summary:        Java logging package
 Group:		Development/Java
 BuildArch:      noarch
