@@ -6,7 +6,7 @@ Summary:        Java logging package
 Group:		Development/Java
 BuildArch:      noarch
 License:        ASL 2.0
-URL:            http://logging.apache.org/%{name}
+URL:            https://logging.apache.org/%{name}
 Source0:        http://www.apache.org/dist/logging/%{name}/%{version}/apache-%{name}-%{version}-src.tar.gz
 
 BuildRequires:  maven-local
