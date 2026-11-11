@@ -1,3 +1,5 @@
 sources:
+  log4j-2.26.1.tar.gz: a6b791a5eed9ec7025f6f9edc016c5c8ab10d4c2
+removed_sources:
   apache-log4j-2.0-src.tar.gz: 217b292792efea2ea98b71af3b8fd18a7e8dccdb
   log4j-1.2.17.tar.gz: 5cfc7a5b8042fada2d2030f1ddbfd165c769fdc6
