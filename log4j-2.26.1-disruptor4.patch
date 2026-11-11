@@ -1,0 +1,28 @@
+--- a/log4j-core/src/main/java/org/apache/logging/log4j/core/async/AsyncLoggerConfigDisruptor.java
++++ b/log4j-core/src/main/java/org/apache/logging/log4j/core/async/AsyncLoggerConfigDisruptor.java
+@@ -22,7 +22,6 @@
+ import com.lmax.disruptor.ExceptionHandler;
+ import com.lmax.disruptor.RingBuffer;
+ import com.lmax.disruptor.Sequence;
+-import com.lmax.disruptor.SequenceReportingEventHandler;
+ import com.lmax.disruptor.TimeoutException;
+ import com.lmax.disruptor.WaitStrategy;
+ import com.lmax.disruptor.dsl.Disruptor;
+@@ -131,17 +130,6 @@
+     }
+ 
+     /**
+-     * EventHandler performs the work in a separate thread.
+-     * <p>
+-     *     <strong>Warning:</strong> this implementation only works with Disruptor 3.x.
+-     * </p>
+-     */
+-    private static final class Log4jEventWrapperHandler3 extends Log4jEventWrapperHandler
+-            implements SequenceReportingEventHandler<Log4jEventWrapper> {
+-        public Log4jEventWrapperHandler3() {}
+-    }
+-
+-    /**
+      * Factory used to populate the RingBuffer with events. These event objects are then re-used during the life of the
+      * RingBuffer.
+      */
